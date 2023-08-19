@@ -74,8 +74,8 @@ class _ProductCardState extends State<ProductCard> {
                   children: [
                     Text(
                       widget.name,
-                      style:
-                          appStyleWithHt(30, Colors.black, FontWeight.bold, 1),
+                      style: appStyleWithHt(
+                          36, Colors.black, FontWeight.bold, 1.1),
                     ),
                     Text(
                       widget.category,
@@ -92,13 +92,13 @@ class _ProductCardState extends State<ProductCard> {
                   children: [
                     Text(
                       widget.price,
-                      style: appStyle(25, Colors.black, FontWeight.w600),
+                      style: appStyle(30, Colors.black, FontWeight.w600),
                     ),
                     Row(
                       children: [
                         Text(
                           "Colors",
-                          style: appStyle(16, Colors.grey, FontWeight.w500),
+                          style: appStyle(18, Colors.grey, FontWeight.w500),
                         ),
                         const SizedBox(width: 5),
                         ChoiceChip(
@@ -106,6 +106,7 @@ class _ProductCardState extends State<ProductCard> {
                           selected: selected,
                           visualDensity: VisualDensity.compact,
                           selectedColor: Colors.black,
+                          shape: const CircleBorder(),
                         )
                       ],
                     )

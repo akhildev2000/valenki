@@ -66,6 +66,9 @@ flutter:
     - assets/images/adidas.png
     - assets/images/gucci.png
     - assets/images/top_image.png
+    - assets/json/men_shoes.json
+    - assets/json/kids_shoes.json
+    - assets/json/women_shoes.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
