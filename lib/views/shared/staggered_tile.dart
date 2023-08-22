@@ -1,8 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:valenki/views/shared/app_style.dart';
 
-class StaggeredTile extends StatefulWidget {
-  const StaggeredTile({
+class StaggeredTiles extends StatefulWidget {
+  const StaggeredTiles({
     super.key,
     required this.imageURL,
     required this.name,
@@ -13,10 +14,10 @@ class StaggeredTile extends StatefulWidget {
   final String price;
 
   @override
-  State<StaggeredTile> createState() => _StaggeredTileState();
+  State<StaggeredTiles> createState() => _StaggeredTilesState();
 }
 
-class _StaggeredTileState extends State<StaggeredTile> {
+class _StaggeredTilesState extends State<StaggeredTiles> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -30,15 +31,13 @@ class _StaggeredTileState extends State<StaggeredTile> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image(
-              image: NetworkImage(
-                widget.imageURL,
-              ),
+            CachedNetworkImage(
+              imageUrl: widget.imageURL,
               fit: BoxFit.fill,
             ),
             Container(
               padding: const EdgeInsets.only(top: 12),
-              height: 70,
+              height: 75,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,

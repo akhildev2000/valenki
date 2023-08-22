@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:valenki/controllers/main_screen_provider.dart';
+import 'package:valenki/controllers/product_provider.dart';
 import 'package:valenki/views/ui/main_screen.dart';
 
-void main() {
+void main() async {
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  WidgetsFlutterBinding.ensureInitialized();
+  await Hive.initFlutter();
+  await Hive.openBox('cart_box');
+  await Hive.openBox('fav_box');
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => MainScreenNotifer())
+        ChangeNotifierProvider(create: (context) => MainScreenNotifer()),
+        ChangeNotifierProvider(create: (context) => ProductNotifier()),
       ],
       child: const MyApp(),
     ),
@@ -30,7 +37,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MainScreen(),
+      home: MainScreen(),
     );
   }
 }
