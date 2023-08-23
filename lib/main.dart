@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:valenki/controllers/cart_provider.dart';
+import 'package:valenki/controllers/favourite_provider.dart';
 import 'package:valenki/controllers/main_screen_provider.dart';
 import 'package:valenki/controllers/product_provider.dart';
 import 'package:valenki/views/ui/main_screen.dart';
@@ -18,6 +20,8 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => MainScreenNotifer()),
         ChangeNotifierProvider(create: (context) => ProductNotifier()),
+        ChangeNotifierProvider(create: (context) => FavoritesNotifier()),
+        ChangeNotifierProvider(create: (context) => CartProvider())
       ],
       child: const MyApp(),
     ),

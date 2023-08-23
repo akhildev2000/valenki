@@ -46,13 +46,12 @@ class BottomNavBar extends StatelessWidget {
                   },
                 ),
                 BottomNav(
-                  onTap: () {
-                    mainScreenNotifer.pageIndex = 2;
-                  },
-                  icon: mainScreenNotifer.pageIndex == 2
-                      ? Ionicons.bag_add
-                      : Ionicons.bag_add_outline,
-                ),
+                    onTap: () {
+                      mainScreenNotifer.pageIndex = 2;
+                    },
+                    icon: mainScreenNotifer.pageIndex == 2
+                        ? Ionicons.heart
+                        : Ionicons.heart_outline),
                 BottomNav(
                   onTap: () {
                     mainScreenNotifer.pageIndex = 3;

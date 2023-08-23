@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:valenki/controllers/main_screen_provider.dart';
 import 'package:valenki/views/ui/cart.dart';
-
+import 'package:valenki/views/ui/favorites.dart';
 import 'package:valenki/views/ui/home_page.dart';
 import 'package:valenki/views/ui/profile.dart';
 import 'package:valenki/views/ui/search.dart';
@@ -13,7 +13,7 @@ class MainScreen extends StatelessWidget {
   final List<Widget> pageList = [
     const HomePage(),
     const SearchPage(),
-    const HomePage(),
+    const Favourites(),
     CartPage(),
     const ProfilePage(),
   ];

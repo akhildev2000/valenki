@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:provider/provider.dart';
+import 'package:valenki/controllers/favourite_provider.dart';
 import 'package:valenki/views/shared/app_style.dart';
+import 'package:valenki/views/ui/favorites.dart';
 
 class ProductCard extends StatefulWidget {
   const ProductCard({
@@ -24,7 +28,9 @@ class ProductCard extends StatefulWidget {
 class _ProductCardState extends State<ProductCard> {
   @override
   Widget build(BuildContext context) {
-    bool selected = true;
+    var favouritesNotifier =
+        Provider.of<FavoritesNotifier>(context, listen: true);
+    favouritesNotifier.getFavourites();
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 0, 20, 0),
       child: ClipRRect(
@@ -61,8 +67,27 @@ class _ProductCardState extends State<ProductCard> {
                     right: 10,
                     top: 10,
                     child: GestureDetector(
-                      onTap: () {},
-                      child: const Icon(Ionicons.heart),
+                      onTap: () {
+                        if (favouritesNotifier.ids.contains(widget.id)) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const Favourites(),
+                              ));
+                        } else {
+                          favouritesNotifier.createFav({
+                            "id": widget.id,
+                            "name": widget.name,
+                            "category": widget.category,
+                            "price": widget.price,
+                            "imageUrl": widget.image,
+                          });
+                        }
+                        setState(() {});
+                      },
+                      child: favouritesNotifier.ids.contains(widget.id)
+                          ? const Icon(Ionicons.heart)
+                          : const Icon(Ionicons.heart_outline),
                     ),
                   )
                 ],

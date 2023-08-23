@@ -4,10 +4,13 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
+import 'package:valenki/controllers/favourite_provider.dart';
 import 'package:valenki/controllers/product_provider.dart';
 import 'package:valenki/services/helper.dart';
 import 'package:valenki/views/shared/app_style.dart';
 import 'package:valenki/views/shared/check_out_button.dart';
+import 'package:valenki/views/ui/favorites.dart';
+import '../../models/constants.dart';
 import '../../models/sneakers_model.dart';
 
 class ProductPage extends StatefulWidget {
@@ -49,6 +52,9 @@ class _ProductPageState extends State<ProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    var favouritesNotifier =
+        Provider.of<FavoritesNotifier>(context, listen: true);
+    favouritesNotifier.getFavourites();
     return Scaffold(
       body: FutureBuilder<Sneakers>(
         future: _sneaker,
@@ -129,10 +135,41 @@ class _ProductPageState extends State<ProductPage> {
                                             MediaQuery.of(context).size.height *
                                                 0.1,
                                         right: 20,
-                                        child: const Icon(
-                                          Ionicons.heart,
-                                          color: Colors.grey,
-                                        ),
+                                        child: Consumer<FavoritesNotifier>(
+                                            builder: (
+                                          context,
+                                          favouriteNotifier,
+                                          child,
+                                        ) {
+                                          return GestureDetector(
+                                            onTap: () async {
+                                              if (favouriteNotifier.ids
+                                                  .contains(widget.id)) {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const Favourites(),
+                                                    ));
+                                              } else {
+                                                favouritesNotifier.createFav({
+                                                  "id": sneaker.id,
+                                                  "name": sneaker.name,
+                                                  "category": sneaker.category,
+                                                  "price": sneaker.price,
+                                                  "imageUrl":
+                                                      sneaker.imageUrl[0],
+                                                });
+                                              }
+                                              setState(() {});
+                                            },
+                                            child: favouriteNotifier.ids
+                                                    .contains(widget.id)
+                                                ? const Icon(Ionicons.heart)
+                                                : const Icon(
+                                                    Ionicons.heart_outline),
+                                          );
+                                        }),
                                       ),
                                       Positioned(
                                         bottom: 0,
@@ -395,7 +432,7 @@ class _ProductPageState extends State<ProductPage> {
                                             padding:
                                                 const EdgeInsets.only(top: 9),
                                             child: CheckOutButton(
-                                              label: "Add to Bag",
+                                              label: "Add to Cart",
                                               onTap: () async {
                                                 _createCart({
                                                   "id": sneaker.id,
