@@ -1,20 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
+import 'package:valenki/controllers/cart_provider.dart';
 import 'package:valenki/controllers/favourite_provider.dart';
 import 'package:valenki/controllers/product_provider.dart';
-import 'package:valenki/services/helper.dart';
 import 'package:valenki/views/shared/app_style.dart';
 import 'package:valenki/views/shared/check_out_button.dart';
+import 'package:valenki/views/shared/reusable_text.dart';
 import 'package:valenki/views/ui/favorites.dart';
-import '../../models/constants.dart';
 import '../../models/sneakers_model.dart';
 
-class ProductPage extends StatefulWidget {
-  const ProductPage({
+class ProductPage extends StatelessWidget {
+  ProductPage({
     super.key,
     required this.id,
     required this.category,
@@ -22,42 +22,19 @@ class ProductPage extends StatefulWidget {
 
   final String id;
   final String category;
-  @override
-  State<ProductPage> createState() => _ProductPageState();
-}
-
-class _ProductPageState extends State<ProductPage> {
   final PageController pageController = PageController();
-  final _cartBox = Hive.box('cart_box');
-  late Future<Sneakers> _sneaker;
-  void getShoes() {
-    if (widget.category == "Men's Running") {
-      _sneaker = Helper().getMaleSneakerById(widget.id);
-    } else if (widget.category == "Women's Running") {
-      _sneaker = Helper().getFemaleSneakerById(widget.id);
-    } else {
-      _sneaker = Helper().getKidsSneakerById(widget.id);
-    }
-  }
-
-  Future<void> _createCart(Map<String, dynamic> newCart) async {
-    _cartBox.add(newCart);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getShoes();
-  }
 
   @override
   Widget build(BuildContext context) {
+    var productNotifier = Provider.of<ProductNotifier>(context);
+    productNotifier.getShoes(category, id);
     var favouritesNotifier =
         Provider.of<FavoritesNotifier>(context, listen: true);
     favouritesNotifier.getFavourites();
+    var cartProvider = Provider.of<CartProvider>(context);
     return Scaffold(
       body: FutureBuilder<Sneakers>(
-        future: _sneaker,
+        future: productNotifier.sneaker,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
@@ -73,7 +50,7 @@ class _ProductPageState extends State<ProductPage> {
                       automaticallyImplyLeading: false,
                       leadingWidth: 0,
                       title: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
+                        padding: EdgeInsets.only(bottom: 10.h),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -106,8 +83,8 @@ class _ProductPageState extends State<ProductPage> {
                         background: Stack(
                           children: [
                             SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.5,
-                              width: MediaQuery.of(context).size.width,
+                              height: 401.h,
+                              width: 375.w,
                               child: PageView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemCount: sneaker!.imageUrl.length,
@@ -119,11 +96,8 @@ class _ProductPageState extends State<ProductPage> {
                                   return Stack(
                                     children: [
                                       Container(
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.39,
-                                        width:
-                                            MediaQuery.of(context).size.width,
+                                        height: 316.h,
+                                        width: 375.w,
                                         color: Colors.grey.shade300,
                                         child: CachedNetworkImage(
                                           imageUrl: sneaker.imageUrl[index],
@@ -144,7 +118,7 @@ class _ProductPageState extends State<ProductPage> {
                                           return GestureDetector(
                                             onTap: () async {
                                               if (favouriteNotifier.ids
-                                                  .contains(widget.id)) {
+                                                  .contains(id)) {
                                                 Navigator.push(
                                                     context,
                                                     MaterialPageRoute(
@@ -161,10 +135,9 @@ class _ProductPageState extends State<ProductPage> {
                                                       sneaker.imageUrl[0],
                                                 });
                                               }
-                                              setState(() {});
                                             },
                                             child: favouriteNotifier.ids
-                                                    .contains(widget.id)
+                                                    .contains(id)
                                                 ? const Icon(Ionicons.heart)
                                                 : const Icon(
                                                     Ionicons.heart_outline),
@@ -222,8 +195,8 @@ class _ProductPageState extends State<ProductPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          sneaker.name,
+                                        ResuableText(
+                                          text: sneaker.name,
                                           style: appStyle(
                                             40,
                                             Colors.black,
@@ -403,11 +376,10 @@ class _ProductPageState extends State<ProductPage> {
                                                   .size
                                                   .width *
                                               0.8,
-                                          child: Text(
-                                            sneaker.title,
-                                            overflow: TextOverflow.ellipsis,
+                                          child: ResuableText(
+                                            text: sneaker.title,
                                             style: appStyle(
-                                              22,
+                                              24,
                                               Colors.black,
                                               FontWeight.w700,
                                             ),
@@ -417,7 +389,7 @@ class _ProductPageState extends State<ProductPage> {
                                         Text(
                                           sneaker.description,
                                           textAlign: TextAlign.justify,
-                                          overflow: TextOverflow.ellipsis,
+                                          overflow: TextOverflow.fade,
                                           maxLines: 3,
                                           style: appStyle(
                                             14,
@@ -425,16 +397,15 @@ class _ProductPageState extends State<ProductPage> {
                                             FontWeight.normal,
                                           ),
                                         ),
-                                        const SizedBox(height: 7),
+                                        SizedBox(height: 7.h),
                                         Align(
                                           alignment: Alignment.bottomCenter,
                                           child: Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 9),
+                                            padding: EdgeInsets.only(top: 9.h),
                                             child: CheckOutButton(
                                               label: "Add to Cart",
                                               onTap: () async {
-                                                _createCart({
+                                                cartProvider.createCart({
                                                   "id": sneaker.id,
                                                   "name": sneaker.name,
                                                   "category": sneaker.category,

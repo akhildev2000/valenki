@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:provider/provider.dart';
+import 'package:valenki/controllers/product_provider.dart';
 import 'package:valenki/views/shared/app_style.dart';
 import 'package:valenki/views/shared/category_btn.dart';
 import 'package:valenki/views/shared/custom_spacer.dart';
 import 'package:valenki/views/shared/latest_shoes.dart';
-import '../../models/sneakers_model.dart';
-import '../../services/helper.dart';
 
 class ProductByCat extends StatefulWidget {
   const ProductByCat({
@@ -21,27 +22,11 @@ class _ProductByCatState extends State<ProductByCat>
     with TickerProviderStateMixin {
   late final TabController _tabController =
       TabController(length: 3, vsync: this);
-  late Future<List<Sneakers>> _male;
-  late Future<List<Sneakers>> _female;
-  late Future<List<Sneakers>> _kids;
-  void getMale() {
-    _male = Helper().getMaleSneaker();
-  }
-
-  void getFemale() {
-    _female = Helper().getFemaleSneaker();
-  }
-
-  void getKids() {
-    _kids = Helper().getKidsSneaker();
-  }
 
   @override
   void initState() {
     super.initState();
-    getMale();
-    getFemale();
-    getKids();
+    _tabController.animateTo(widget.tabIndex, curve: Curves.easeIn);
   }
 
   List<String> brand = [
@@ -52,6 +37,10 @@ class _ProductByCatState extends State<ProductByCat>
   ];
   @override
   Widget build(BuildContext context) {
+    var productNotifier = Provider.of<ProductNotifier>(context);
+    productNotifier.getFemale();
+    productNotifier.getMale();
+    productNotifier.getKids();
     return Scaffold(
       backgroundColor: const Color(0xFFE2E2E2),
       body: SizedBox(
@@ -59,8 +48,8 @@ class _ProductByCatState extends State<ProductByCat>
         child: Stack(
           children: [
             Container(
-              padding: const EdgeInsets.fromLTRB(16, 45, 0, 0),
-              height: MediaQuery.of(context).size.height * 0.4,
+              padding: EdgeInsets.only(left: 16.w, top: 45.h),
+              height: 325.h,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage("assets/images/top_image.png"),
@@ -71,7 +60,7 @@ class _ProductByCatState extends State<ProductByCat>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(6, 12, 16, 18),
+                    padding: EdgeInsets.fromLTRB(6.w, 12.h, 16.w, 18.h),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -124,9 +113,9 @@ class _ProductByCatState extends State<ProductByCat>
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    LatestShoes(male: _male),
-                    LatestShoes(male: _female),
-                    LatestShoes(male: _kids),
+                    LatestShoes(male: productNotifier.male),
+                    LatestShoes(male: productNotifier.female),
+                    LatestShoes(male: productNotifier.kids),
                   ],
                 ),
               ),
@@ -138,7 +127,7 @@ class _ProductByCatState extends State<ProductByCat>
   }
 
   Future<dynamic> filter() {
-    double _value = 100;
+    double value = 100;
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -232,13 +221,13 @@ class _ProductByCatState extends State<ProductByCat>
                     style: appStyle(20, Colors.black, FontWeight.bold),
                   ),
                   Slider(
-                    value: _value,
+                    value: value,
                     activeColor: Colors.black,
                     inactiveColor: Colors.grey,
                     thumbColor: Colors.black,
                     max: 500,
                     divisions: 50,
-                    label: _value.toString(),
+                    label: value.toString(),
                     secondaryTrackValue: 200,
                     onChanged: (double value) {},
                   ),

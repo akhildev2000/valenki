@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:valenki/models/sneakers_model.dart';
 import 'package:valenki/views/shared/app_style.dart';
 import 'package:valenki/views/shared/new_shoes.dart';
 import 'package:valenki/views/shared/product_card.dart';
+import 'package:valenki/views/shared/reusable_text.dart';
 import 'package:valenki/views/ui/product_by_cat.dart';
 import 'package:valenki/views/ui/product_page.dart';
 import '../../controllers/product_provider.dart';
@@ -25,7 +27,7 @@ class HomeWidget extends StatelessWidget {
     return Column(
       children: [
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.405,
+          height: 325.h,
           child: FutureBuilder<List<Sneakers>>(
             future: _male,
             builder: (context, snapshot) {
@@ -67,12 +69,12 @@ class HomeWidget extends StatelessWidget {
         Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(12, 20, 12, 20),
+              padding: EdgeInsets.fromLTRB(12.w, 20.h, 12.w, 20.h),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "Latest Shoes",
+                  ResuableText(
+                    text: "Latest Shoes",
                     style: appStyle(24, Colors.black, FontWeight.bold),
                   ),
                   GestureDetector(
@@ -88,13 +90,13 @@ class HomeWidget extends StatelessWidget {
                     },
                     child: Row(
                       children: [
-                        Text(
-                          "Show All",
+                        ResuableText(
+                          text: "Show All",
                           style: appStyle(24, Colors.black, FontWeight.w500),
                         ),
-                        const Icon(
+                        Icon(
                           Ionicons.play,
-                          size: 20,
+                          size: 20.h,
                         )
                       ],
                     ),
@@ -105,7 +107,7 @@ class HomeWidget extends StatelessWidget {
           ],
         ),
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.13,
+          height: 99.h,
           child: FutureBuilder<List<Sneakers>>(
             future: _male,
             builder: (context, snapshot) {
@@ -121,7 +123,7 @@ class HomeWidget extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final shoe = snapshot.data![index];
                     return Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding:  EdgeInsets.all(8.0.h),
                       child: NewShoes(imageURL: shoe.imageUrl[0]),
                     );
                   },

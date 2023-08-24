@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import 'package:valenki/models/sneakers_model.dart';
@@ -29,11 +30,8 @@ class LatestShoes extends StatelessWidget {
             crossAxisSpacing: 20,
             mainAxisSpacing: 16,
             staggeredTileBuilder: (index) => StaggeredTile.extent(
-              (index % 2 == 0) ? 1 : 1,
-              (index % 4 == 1 || index % 4 == 3)
-                  ? MediaQuery.of(context).size.height * 0.35
-                  : MediaQuery.of(context).size.height * 0.3,
-            ),
+                (index % 2 == 0) ? 1 : 1,
+                (index % 4 == 1 || index % 4 == 3) ? 285.h : 252.h),
             itemCount: male!.length,
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {

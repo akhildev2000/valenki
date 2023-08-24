@@ -11,6 +11,9 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+Future<void> createCart(Map<String, dynamic> newCart) async {
+    _cartBox.add(newCart);
+  }
   getCart() {
     final cartData = _cartBox.keys.map((key) {
       final item = _cartBox.get(key);

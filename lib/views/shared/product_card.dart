@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:provider/provider.dart';
 import 'package:valenki/controllers/favourite_provider.dart';
 import 'package:valenki/views/shared/app_style.dart';
+import 'package:valenki/views/shared/reusable_text.dart';
 import 'package:valenki/views/ui/favorites.dart';
 
-class ProductCard extends StatefulWidget {
+class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
     required this.category,
@@ -22,22 +23,17 @@ class ProductCard extends StatefulWidget {
   final String image;
 
   @override
-  State<ProductCard> createState() => _ProductCardState();
-}
-
-class _ProductCardState extends State<ProductCard> {
-  @override
   Widget build(BuildContext context) {
     var favouritesNotifier =
         Provider.of<FavoritesNotifier>(context, listen: true);
     favouritesNotifier.getFavourites();
     return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 20, 0),
+      padding: EdgeInsets.only(left: 8.w, right: 20.w),
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(16)),
         child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width * 0.6,
+          height: 325.h,
+          width: 225.w,
           decoration: const BoxDecoration(
             boxShadow: [
               BoxShadow(
@@ -54,21 +50,21 @@ class _ProductCardState extends State<ProductCard> {
               Stack(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.23,
+                    height: 186.h,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: NetworkImage(
-                          widget.image,
+                          image,
                         ),
                       ),
                     ),
                   ),
                   Positioned(
-                    right: 10,
-                    top: 10,
+                    right: 10.w,
+                    top: 10.h,
                     child: GestureDetector(
                       onTap: () {
-                        if (favouritesNotifier.ids.contains(widget.id)) {
+                        if (favouritesNotifier.ids.contains(id)) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -76,16 +72,15 @@ class _ProductCardState extends State<ProductCard> {
                               ));
                         } else {
                           favouritesNotifier.createFav({
-                            "id": widget.id,
-                            "name": widget.name,
-                            "category": widget.category,
-                            "price": widget.price,
-                            "imageUrl": widget.image,
+                            "id": id,
+                            "name": name,
+                            "category": category,
+                            "price": price,
+                            "imageUrl": image,
                           });
                         }
-                        setState(() {});
                       },
-                      child: favouritesNotifier.ids.contains(widget.id)
+                      child: favouritesNotifier.ids.contains(id)
                           ? const Icon(Ionicons.heart)
                           : const Icon(Ionicons.heart_outline),
                     ),
@@ -93,17 +88,17 @@ class _ProductCardState extends State<ProductCard> {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 8),
+                padding: EdgeInsets.only(left: 8.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.name,
+                    ResuableText(
+                      text: name,
                       style: appStyleWithHt(
                           32, Colors.black, FontWeight.bold, 1.1),
                     ),
-                    Text(
-                      widget.category,
+                    ResuableText(
+                      text: category,
                       style:
                           appStyleWithHt(18, Colors.grey, FontWeight.bold, 1.5),
                     )
@@ -111,12 +106,12 @@ class _ProductCardState extends State<ProductCard> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8),
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      widget.price,
+                    ResuableText(
+                      text: price,
                       style: appStyle(30, Colors.black, FontWeight.w600),
                     ),
                   ],
